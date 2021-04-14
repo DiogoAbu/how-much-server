@@ -1,0 +1,40 @@
+name: Push to Heroku
+
+on:
+  workflow_dispatch:
+    inputs:
+      checkoutRef:
+        description: "Tag or SHA ref to checkout"
+        required: false
+        default: ""
+  release:
+    types:
+      - published
+
+jobs:
+  release:
+    name: Push to Heroku
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.checkoutRef }}
+
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Push to Heroku
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_on: error
+          command: |
+            git remote add heroku https://heroku:$API_KEY@git.heroku.com/$APP_NAME.git
+            git push heroku HEAD:master -f
+        env:
+          API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          APP_NAME: ${{ secrets.HEROKU_APP_NAME }}

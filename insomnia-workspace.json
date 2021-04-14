@@ -1,0 +1,201 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2020-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2021.2.2",
+  "resources": [
+    {
+      "_id": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "parentId": null,
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "How much",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_450e60e0269b4757853d52174b39d13a",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Me",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"{\\n  me {\\n    id\\n    name\\n    email\\n    pictureUri\\n    lastAccessAt\\n  }\\n}\\n\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744431,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_501c20dee66a4ac9a0028cebc1be46bd",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "List Users",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"query ListUsers($where: ListUsersWhere) {\\n  listUsers(where: $where) {\\n    id\\n    name\\n    pictureUri\\n    isFollowingMe\\n    isFollowedByMe\\n  }\\n}\\n\",\"variables\":{\"where\":{\"name\":\"\"}},\"operationName\":\"ListUsers\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744381,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_f35a2f9037b24e1da47dc9091a5ec791",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Create Account",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"test\",\"email\":\"test@noreply.io\",\"password\":\"password\"}},\"operationName\":\"CreateAccount\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1618347744531,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_fdbbd8d0eb024dc99f803650b4c1f288",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Sign In",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\"}},\"operationName\":\"SignIn\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1618347744481,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "jar_57254796dfb11a14bebeece3e6bc7c3df055f439",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "spc_1e99351070464c55aadb637cab2765c3",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "fileName": "How much",
+      "contents": "",
+      "contentType": "yaml",
+      "_type": "api_spec"
+    },
+    {
+      "_id": "env_57254796dfb11a14bebeece3e6bc7c3df055f439",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "Base Environment",
+      "data": {},
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1618347686578,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_837a695b4a1b477090cbd611e8871a62",
+      "parentId": "env_57254796dfb11a14bebeece3e6bc7c3df055f439",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "Dev",
+      "data": {
+        "url": "http://localhost:5678"
+      },
+      "dataPropertyOrder": {
+        "&": ["url"]
+      },
+      "color": "#7d69cb",
+      "isPrivate": false,
+      "metaSortKey": 1618347698726,
+      "_type": "environment"
+    }
+  ]
+}

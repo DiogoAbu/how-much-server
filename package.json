@@ -1,0 +1,108 @@
+{
+  "name": "how-much-server",
+  "version": "0.0.0",
+  "description": "A graphql server for the app How Much",
+  "private": true,
+  "main": "dist",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist",
+    "predev": "docker run --name postgres_dev --env-file .env -p 5432:5432 -v postgres_dev:/var/lib/postgresql/data --restart always --detach postgres:13-alpine || docker start postgres_dev || exit 0",
+    "dev": "wait-on -t 10000 tcp:5432 && ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src",
+    "prune-branches": "git fetch -p && npx git-removed-branches --prune",
+    "pretest": "docker rm --force --volumes postgres_howmuch_test && docker run --name postgres_howmuch_test -p 4321:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=howmuchtest --restart always --detach postgres:13-alpine",
+    "test": "wait-on -d 4000 -t 10000 tcp:4321 && jest",
+    "posttest": "docker rm --force --volumes postgres_howmuch_test",
+    "typecheck": "tsc --noEmit",
+    "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
+    "prettier": "prettier \"**/{*,}.{json,eslintrc,prettierrc}\" --config ./.prettierrc --check",
+    "lint": "yarn eslint && yarn prettier",
+    "lint-fix": "yarn eslint --fix && yarn prettier --write",
+    "postinstall": "patch-package"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "npx yarn-lock-fix && yarn typecheck && lint-staged && yarn test",
+      "post-commit": "git update-index --again",
+      "pre-push": "git fetch --prune origin \"+refs/tags/*:refs/tags/*\""
+    }
+  },
+  "lint-staged": {
+    "*.{j,t}s{,x}": "eslint --config ./.eslintrc --cache --fix --max-warnings 0",
+    "*.json": "prettier --config ./.prettierrc --write"
+  },
+  "dependencies": {
+    "apollo-server": "^2.22.2",
+    "bcrypt": "^5.0.1",
+    "class-validator": "^0.13.1",
+    "debug": "^4.3.1",
+    "graphql": "^15.5.0",
+    "nodemailer": "^6.5.0",
+    "paseto.js": "^0.1.7",
+    "pg": "^8.5.1",
+    "reflect-metadata": "^0.1.13",
+    "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
+    "type-graphql": "^1.1.1",
+    "typedi": "0.8.0",
+    "typeorm": "^0.2.32",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@types/bcrypt": "^3.0.1",
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^26.0.22",
+    "@types/nodemailer": "^6.4.1",
+    "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "babel-eslint": "10.1.0",
+    "conventional-changelog-conventionalcommits": "^4.5.0",
+    "dotenv": "^8.2.0",
+    "eslint": "7.24.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-config-superop": "1.0.5",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jest": "24.3.5",
+    "eslint-plugin-prettier": "3.3.1",
+    "eslint-plugin-simple-import-sort": "7.0.0",
+    "eslint-plugin-unused-imports": "1.1.1",
+    "husky": "4.3.8",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "2.2.1",
+    "semantic-release": "^17.4.2",
+    "supertest": "^6.1.3",
+    "supports-color": "^8.1.1",
+    "ts-jest": "^26.5.4",
+    "typescript": "^4.2.4",
+    "wait-on": "^5.3.0"
+  },
+  "jest": {
+    "clearMocks": true,
+    "maxWorkers": 1,
+    "moduleNameMapper": {
+      "^!/(.*)$": "<rootDir>/src/$1"
+    },
+    "preset": "ts-jest",
+    "setupFiles": [
+      "./jest/jest.setup.js"
+    ],
+    "testEnvironment": "node"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Diogo de Azevedo Silva <diogodeazevedosilva@gmail.com>",
+  "repository": "https://github.com/DiogoAbu/how-much-server.git",
+  "homepage": "https://github.com/DiogoAbu/how-much-server",
+  "bugs": "https://github.com/DiogoAbu/how-much-server/issues"
+}
