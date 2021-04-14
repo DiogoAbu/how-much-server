@@ -8,6 +8,9 @@ on:
 
 env:
   node-version: "12"
+  postgres-user: postgres
+  postgres-password: password
+  postgres-db: howmuchtest
 
 jobs:
   publish:
@@ -17,17 +20,13 @@ jobs:
     services:
       postgres:
         image: postgres:13-alpine
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
-          - 4321:5432
+          - 5432/tcp
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: howmuchtest
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          POSTGRES_USER: ${{ env.postgres-user }}
+          POSTGRES_PASSWORD: ${{ env.postgres-password }}
+          POSTGRES_DB: ${{ env.postgres-db }}
 
     steps:
       - name: Checkout the repo
@@ -70,6 +69,8 @@ jobs:
 
       - name: Start test
         run: yarn jest --ci --onlyChanged --coverage --json --outputFile=jest.results.json
+        env:
+          DATABASE_URL: postgres://${{ env.postgres-user }}:${{ env.postgres-password }}@localhost:${{ job.services.postgres.ports[5432] }}/${{ env.postgres-db }}
 
       - name: Handle test results
         uses: wildone/jest-github-action@45e8796f0fbf3491a8657de9d2b3f13f75de9a7d
