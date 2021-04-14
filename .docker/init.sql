@@ -1,0 +1,2 @@
+CREATE DATABASE howmuchtest;
+GRANT ALL PRIVILEGES ON DATABASE howmuchtest TO postgres;

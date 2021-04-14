@@ -8,7 +8,7 @@ const SECRET_KEY = process.env.SECRET_KEY!;
 /**
  * Encrypt payload returning the token.
  */
-export async function payloadToToken(user: Partial<User>): Promise<string> {
+export async function payloadToToken(user: Partial<User>, uniqueIdentifier: string): Promise<string> {
   // Create key
   const key = new SymmetricKey(new Protocol());
 
@@ -16,7 +16,7 @@ export async function payloadToToken(user: Partial<User>): Promise<string> {
   await key.base64(SECRET_KEY);
 
   // Set token payload
-  const payload: AuthenticationPayload = { id: user.id! };
+  const payload: AuthenticationPayload = { id: user.id!, uniqueIdentifier };
 
   // Prepare payload
   const message = JSON.stringify(payload, null, 0);

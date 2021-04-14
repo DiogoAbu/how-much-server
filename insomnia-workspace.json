@@ -60,7 +60,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"query ListUsers($where: ListUsersWhere) {\\n  listUsers(where: $where) {\\n    id\\n    name\\n    pictureUri\\n    isFollowingMe\\n    isFollowedByMe\\n  }\\n}\\n\",\"variables\":{\"where\":{\"name\":\"\"}},\"operationName\":\"ListUsers\"}"
+        "text": "{\"query\":\"query ListUsers($where: ListUsersWhere) {\\n  listUsers(where: $where) {\\n    count\\n    results {\\n      id\\n      name\\n      pictureUri\\n      isFollowingMe\\n      isFollowedByMe\\n    }\\n  }\\n}\\n\",\"variables\":{\"where\":{\"name\":\"\"}},\"operationName\":\"ListUsers\"}"
       },
       "parameters": [],
       "headers": [
@@ -85,6 +85,76 @@
       "_type": "request"
     },
     {
+      "_id": "req_b8497a941c1f4ad09812b6a029244b23",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Start Following",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation StartFollowing($userId: String!) {\\n  startFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"501854c5-1b3a-476b-9749-3bcd74947308\"},\"operationName\":\"StartFollowing\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744331,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_d321fefc47b949218693de8998d0f4f6",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Stop Following",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation StopFollowing($userId: String!) {\\n  stopFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"501854c5-1b3a-476b-9749-3bcd74947308\"},\"operationName\":\"StopFollowing\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744281,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_f35a2f9037b24e1da47dc9091a5ec791",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -95,7 +165,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"test\",\"email\":\"test@noreply.io\",\"password\":\"password\"}},\"operationName\":\"CreateAccount\"}"
+        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Gilson\",\"email\":\"gilson@noreply.io\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"CreateAccount\"}"
       },
       "parameters": [],
       "headers": [
@@ -127,7 +197,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\"}},\"operationName\":\"SignIn\"}"
+        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogo@noreply.io\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"SignIn\"}"
       },
       "parameters": [],
       "headers": [

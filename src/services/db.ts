@@ -17,7 +17,7 @@ export default async (): Promise<Connection> => {
     cache: true,
     dropSchema: TYPEORM_DROP === 'true',
     entities,
-    logging: 'all',
+    logging: process.env.NODE_ENV !== 'production' ? 'all' : ['error', 'warn'],
     logger: 'debug',
     synchronize: TYPEORM_SYNC === 'true',
     migrationsRun: true,

@@ -7,6 +7,7 @@ import {
   CreateAccountInput,
   ForgotPasswordInput,
   ListUsersArgs,
+  ListUsersResponse,
   SignInInput,
   SignInResponse,
 } from '!/inputs/user';
@@ -38,7 +39,7 @@ export class UserResolver {
 
   @Mutation(() => SignInResponse)
   async createAccount(@Arg('data') data: CreateAccountInput): Promise<SignInResponse> {
-    const { name, email, password, pictureUri } = data;
+    const { name, email, password, pictureUri, uniqueIdentifier } = data;
 
     const user = await User.create({
       name,
@@ -50,13 +51,13 @@ export class UserResolver {
 
     return {
       user,
-      token: await payloadToToken(user),
+      token: await payloadToToken(user, uniqueIdentifier),
     };
   }
 
   @Mutation(() => SignInResponse)
   async signIn(@Arg('data') data: SignInInput): Promise<SignInResponse> {
-    const { email, password } = data;
+    const { email, password, uniqueIdentifier } = data;
 
     const user = await User.createQueryBuilder('user')
       .where('user.email = :email AND user.isDeleted = false', { email })
@@ -77,7 +78,7 @@ export class UserResolver {
 
     return {
       user,
-      token: await payloadToToken(user),
+      token: await payloadToToken(user, uniqueIdentifier),
     };
   }
 
@@ -155,11 +156,14 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User])
-  async listUsers(@Args() data: ListUsersArgs): Promise<User[]> {
+  @Query(() => ListUsersResponse)
+  async listUsers(@Args() data: ListUsersArgs): Promise<ListUsersResponse> {
     const { where, order, skip, take } = data;
 
-    let query = User.createQueryBuilder('u');
+    let query = User.createQueryBuilder('u')
+      .select('u.id')
+      .where('u.isDeleted = false')
+      .andWhere('u.name IS NOT null');
 
     if (where?.name) {
       query = query.andWhere('u.name ILIKE :name', { name: where.name });
@@ -169,16 +173,20 @@ export class UserResolver {
       query = query.addOrderBy('u.name', order.name === 'DESC' ? 'DESC' : 'ASC');
     }
 
-    return await query
-      .select('u.id')
+    const count = await query.distinct(true).getCount();
+
+    const users = await query
       .addSelect('u.name')
       .addSelect('u.pictureUri')
       .addSelect('u.isDeleted')
-      .andWhere('u.name IS NOT null')
-      .andWhere('u.isDeleted = false')
       .skip(skip)
       .take(take)
       .getMany();
+
+    return {
+      count,
+      results: users,
+    };
   }
 
   @Authorized()
@@ -207,7 +215,7 @@ export class UserResolver {
       throw new ApolloError('User not found', 'NOT_FOUND');
     }
 
-    // Update user document
+    // Add self as follower of user
     userToFollow.followers.push(userFound);
 
     await userToFollow.save();
@@ -220,31 +228,26 @@ export class UserResolver {
     description: 'Remove signed user as follower',
   })
   async stopFollowing(
-    @Arg('userId', { nullable: false }) userIdToFollow: string,
+    @Arg('userId', { nullable: false }) userIdToUnfollow: string,
     @Ctx() ctx: Context,
   ): Promise<boolean> {
     // Signed in user
     const userId = ctx.userId!;
 
-    if (userId === userIdToFollow) {
+    if (userId === userIdToUnfollow) {
       log('User cannot unfollow itself');
       return false;
     }
 
-    const userFound = await User.findOne(userId);
-    if (!userFound) {
+    const userToUnfollow = await User.findOne(userIdToUnfollow, { relations: ['followers'] });
+    if (!userToUnfollow) {
       throw new ApolloError('User not found', 'NOT_FOUND');
     }
 
-    const userToFollow = await User.findOne(userIdToFollow, { relations: ['followers'] });
-    if (!userToFollow) {
-      throw new ApolloError('User not found', 'NOT_FOUND');
-    }
+    // Remove self from followers of user
+    userToUnfollow.followers = userToUnfollow.followers.filter((each) => each.id !== userId);
 
-    // Update user document
-    userToFollow.followers = userToFollow.followers.filter((each) => each.id !== userId);
-
-    await userToFollow.save();
+    await userToUnfollow.save();
 
     return true;
   }

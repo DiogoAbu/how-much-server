@@ -26,6 +26,10 @@ export class CreateAccountInput implements Partial<User> {
   @Field()
   @IsOptional()
   pictureUri?: string;
+
+  @Field()
+  @IsNotEmpty()
+  uniqueIdentifier: string;
 }
 
 @InputType()
@@ -39,6 +43,10 @@ export class SignInInput implements Partial<User> {
   @Length(2, undefined, { message: messageLength })
   @IsNotEmpty()
   password: string;
+
+  @Field()
+  @IsNotEmpty()
+  uniqueIdentifier: string;
 }
 
 @InputType()
@@ -99,6 +107,14 @@ export class ListUsersArgs {
   @Max(50)
   @IsOptional()
   take?: number;
+}
+@ObjectType()
+export class ListUsersResponse {
+  @Field()
+  count: number;
+
+  @Field(() => [User])
+  results: User[];
 }
 
 @ObjectType()

@@ -7,6 +7,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await global.server.stop();
+  await global.db.dropDatabase();
   await global.db.close();
 });
 

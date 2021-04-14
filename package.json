@@ -7,18 +7,19 @@
   "scripts": {
     "build": "tsc",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist",
-    "predev": "docker run --name postgres_dev --env-file .env -p 5432:5432 -v postgres_dev:/var/lib/postgresql/data --restart always --detach postgres:13-alpine || docker start postgres_dev || exit 0",
-    "dev": "wait-on -t 10000 tcp:5432 && ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src",
-    "prune-branches": "git fetch -p && npx git-removed-branches --prune",
-    "pretest": "docker rm --force --volumes postgres_howmuch_test && docker run --name postgres_howmuch_test -p 4321:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=howmuchtest --restart always --detach postgres:13-alpine",
-    "test": "wait-on -d 4000 -t 10000 tcp:4321 && jest",
-    "posttest": "docker rm --force --volumes postgres_howmuch_test",
+    "predev": "yarn docker-start && wait-on -t 10000 tcp:4321",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src",
+    "pretest": "yarn docker-start && wait-on -t 10000 tcp:4321",
+    "test": "jest",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
     "prettier": "prettier \"**/{*,}.{json,eslintrc,prettierrc}\" --config ./.prettierrc --check",
     "lint": "yarn eslint && yarn prettier",
     "lint-fix": "yarn eslint --fix && yarn prettier --write",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "prune-branches": "git fetch -p && npx git-removed-branches --prune",
+    "docker-build": "docker build -t postgres-hm ./.docker/",
+    "docker-start": "docker run --name postgres-hm-dev -p 4321:5432 -v postgres-hm-dev:/var/lib/postgresql/data --restart always --detach postgres-hm || docker start postgres-hm-dev || exit 0"
   },
   "husky": {
     "hooks": {
@@ -42,6 +43,7 @@
     "paseto.js": "^0.1.7",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
+    "throng": "^5.0.0",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",
     "type-graphql": "^1.1.1",
@@ -59,6 +61,7 @@
     "@types/jest": "^26.0.22",
     "@types/nodemailer": "^6.4.1",
     "@types/supertest": "^2.0.11",
+    "@types/throng": "^5.0.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
