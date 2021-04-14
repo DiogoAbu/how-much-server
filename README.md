@@ -1,7 +1,7 @@
 <h1 align="center">How Much</h1><br>
 
 <p align="center">
-  A graphql server for the app [How Much](https://github.com/DiogoAbu/how-much).
+  A graphql server for the app <a href="https://github.com/DiogoAbu/how-much">How Much</a>.
 </p>
 
 <p align="center">
