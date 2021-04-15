@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres
+    build: ./postgres
+    image: postgres-how-much
+    ports:
+      - '4321:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    container_name: redis
+    image: redis:6-alpine
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '5268:6379'
+    volumes:
+      - redis-data:/data
+
+volumes:
+  postgres-data:
+  redis-data:

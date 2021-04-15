@@ -7,9 +7,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist",
-    "predev": "yarn docker-start && wait-on -t 10000 tcp:4321",
+    "predev": "yarn docker-up && wait-on -d 1000 -t 10000 tcp:4321 tcp:5268",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src",
-    "pretest": "yarn docker-start && wait-on -t 10000 tcp:4321",
+    "pretest": "yarn docker-up && wait-on -d 1000 -t 10000 tcp:4321 tcp:5268",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
@@ -18,8 +18,8 @@
     "lint-fix": "yarn eslint --fix && yarn prettier --write",
     "postinstall": "patch-package",
     "prune-branches": "git fetch -p && npx git-removed-branches --prune",
-    "docker-build": "docker build -t postgres-hm ./.docker/",
-    "docker-start": "docker run --name postgres-hm-dev -p 4321:5432 -v postgres-hm-dev:/var/lib/postgresql/data --restart always --detach postgres-hm || docker start postgres-hm-dev || exit 0"
+    "docker-up": "docker-compose --project-directory ./.docker/ --file ./.docker/docker-compose.yml --project-name how-much-server up --detach",
+    "docker-down": "docker-compose --project-directory ./.docker/ --file ./.docker/docker-compose.yml --project-name how-much-server down"
   },
   "husky": {
     "hooks": {

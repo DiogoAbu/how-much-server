@@ -4,7 +4,7 @@ import '!/services/container';
 
 import throng from 'throng';
 
-const WORKERS = process.env.WEB_CONCURRENCY ?? '1';
+const WORKERS = parseInt(process.env.WEB_CONCURRENCY ?? '1', 10);
 
 async function start() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
 } else {
   throng({
     worker: start,
-    count: parseInt(WORKERS, 10),
+    count: WORKERS,
     lifetime: Infinity,
   });
 }
