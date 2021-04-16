@@ -15,6 +15,41 @@
       "_type": "workspace"
     },
     {
+      "_id": "req_247ea49589e647f08cf3607078d9de4a",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Forgot Password",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation ForgotPassword($email: String!) {\\n  forgotPassword(email: $email)\\n}\\n\",\"variables\":{\"email\":\"diogodeazevedosilva@gmail.com\"},\"operationName\":\"ForgotPassword\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744231,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_450e60e0269b4757853d52174b39d13a",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -85,6 +120,41 @@
       "_type": "request"
     },
     {
+      "_id": "req_5e987a55196342ceb7b66fcd1d0729a3",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Change Password",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    success\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"code\":378982,\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"ChangePassword\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744181,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_b8497a941c1f4ad09812b6a029244b23",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -95,7 +165,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation StartFollowing($userId: String!) {\\n  startFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"501854c5-1b3a-476b-9749-3bcd74947308\"},\"operationName\":\"StartFollowing\"}"
+        "text": "{\"query\":\"mutation StartFollowing($userId: String!) {\\n  startFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"19fa5a6a-9547-49bf-b424-f99b4a737d6a\"},\"operationName\":\"StartFollowing\"}"
       },
       "parameters": [],
       "headers": [
@@ -130,7 +200,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation StopFollowing($userId: String!) {\\n  stopFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"501854c5-1b3a-476b-9749-3bcd74947308\"},\"operationName\":\"StopFollowing\"}"
+        "text": "{\"query\":\"mutation StopFollowing($userId: String!) {\\n  stopFollowing(userId: $userId)\\n}\\n\",\"variables\":{\"userId\":\"19fa5a6a-9547-49bf-b424-f99b4a737d6a\"},\"operationName\":\"StopFollowing\"}"
       },
       "parameters": [],
       "headers": [
@@ -165,7 +235,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Gilson\",\"email\":\"gilson@noreply.io\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"CreateAccount\"}"
+        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Diogo\",\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"CreateAccount\"}"
       },
       "parameters": [],
       "headers": [
@@ -197,7 +267,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogo@noreply.io\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"SignIn\"}"
+        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"SignIn\"}"
       },
       "parameters": [],
       "headers": [
@@ -238,6 +308,23 @@
       "_type": "api_spec"
     },
     {
+      "_id": "env_3420be7aaaf94431bd3d73d6f566a8f6",
+      "parentId": "env_57254796dfb11a14bebeece3e6bc7c3df055f439",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "Prod",
+      "data": {
+        "url": "https://how-much-server.herokuapp.com/graphql"
+      },
+      "dataPropertyOrder": {
+        "&": ["url"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1618514311937,
+      "_type": "environment"
+    },
+    {
       "_id": "env_57254796dfb11a14bebeece3e6bc7c3df055f439",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -257,7 +344,7 @@
       "created": 1600000000000,
       "name": "Dev",
       "data": {
-        "url": "http://localhost:5678"
+        "url": "http://localhost:5678/graphql"
       },
       "dataPropertyOrder": {
         "&": ["url"]

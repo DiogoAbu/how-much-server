@@ -1,5 +1,7 @@
 import supertest from 'supertest';
 
+import randomInteger from '!/utils/random-integer';
+
 beforeAll(async () => {
   await global.startDb();
   await global.startServer();
@@ -28,11 +30,21 @@ describe('user register/login tests', () => {
     }`;
 
     const request = supertest(global.serverUrl).post('graphql');
-    const response = await request.send({ query, variables: { user: { name, email, password } } });
+    const response = await request.send({
+      query,
+      variables: {
+        user: {
+          name,
+          email,
+          password,
+          uniqueIdentifier: String(randomInteger(9)),
+        },
+      },
+    });
 
     expect(response.status).toEqual(200);
-    expect(response.body.data.createAccount.user).toEqual({ name, email });
     expect(response.body).toHaveProperty('data.createAccount.token');
+    expect(response.body.data.createAccount.user).toEqual({ name, email });
   });
 
   it('successfully sign in', async () => {
@@ -47,10 +59,19 @@ describe('user register/login tests', () => {
     }`;
 
     const request = supertest(global.serverUrl).post('graphql');
-    const response = await request.send({ query, variables: { user: { email, password } } });
+    const response = await request.send({
+      query,
+      variables: {
+        user: {
+          email,
+          password,
+          uniqueIdentifier: String(randomInteger(9)),
+        },
+      },
+    });
 
     expect(response.status).toEqual(200);
-    expect(response.body.data.signIn.user).toEqual({ name, email });
     expect(response.body).toHaveProperty('data.signIn.token');
+    expect(response.body.data.signIn.user).toEqual({ name, email });
   });
 });

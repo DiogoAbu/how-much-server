@@ -49,8 +49,8 @@ export class SignInInput implements Partial<User> {
   uniqueIdentifier: string;
 }
 
-@InputType()
-export class ForgotPasswordInput implements Partial<User> {
+@ArgsType()
+export class ForgotPasswordArgs implements Partial<User> {
   @Field()
   @IsEmail()
   @IsNotEmpty()
@@ -67,6 +67,10 @@ export class ChangePasswordInput implements Partial<User> {
   @Length(2, undefined, { message: messageLength })
   @IsNotEmpty()
   password: string;
+
+  @Field()
+  @IsNotEmpty()
+  uniqueIdentifier: string;
 }
 
 @InputType()
@@ -121,6 +125,15 @@ export class ListUsersResponse {
 export class SignInResponse {
   @Field(() => User)
   user: User;
+
+  @Field()
+  token: string;
+}
+
+@ObjectType()
+export class ChangePasswordResponse {
+  @Field()
+  success: boolean;
 
   @Field()
   token: string;

@@ -18,8 +18,8 @@
     "lint-fix": "yarn eslint --fix && yarn prettier --write",
     "postinstall": "patch-package",
     "prune-branches": "git fetch -p && npx git-removed-branches --prune",
-    "docker-up": "docker-compose --project-directory ./.docker/ --file ./.docker/docker-compose.yml --project-name how-much-server up --detach",
-    "docker-down": "docker-compose --project-directory ./.docker/ --file ./.docker/docker-compose.yml --project-name how-much-server down"
+    "docker-up": "docker compose --project-directory ./.docker --project-name how-much-server up --detach --no-recreate",
+    "docker-down": "docker compose --project-directory ./.docker --project-name how-much-server down"
   },
   "husky": {
     "hooks": {
@@ -39,6 +39,7 @@
     "class-validator": "^0.13.1",
     "debug": "^4.3.1",
     "graphql": "^15.5.0",
+    "ioredis": "^4.26.0",
     "nodemailer": "^6.5.0",
     "paseto.js": "^0.1.7",
     "pg": "^8.5.1",
@@ -58,6 +59,7 @@
     "@semantic-release/git": "^9.0.0",
     "@types/bcrypt": "^3.0.1",
     "@types/debug": "^4.1.5",
+    "@types/ioredis": "^4.22.3",
     "@types/jest": "^26.0.22",
     "@types/nodemailer": "^6.4.1",
     "@types/supertest": "^2.0.11",
@@ -89,7 +91,8 @@
     "supports-color": "^8.1.1",
     "ts-jest": "^26.5.4",
     "typescript": "^4.2.4",
-    "wait-on": "^5.3.0"
+    "wait-on": "^5.3.0",
+    "weak-napi": "^2.0.2"
   },
   "jest": {
     "clearMocks": true,

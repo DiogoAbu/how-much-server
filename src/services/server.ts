@@ -52,9 +52,9 @@ export default async (): Promise<{ server: ApolloServer; url: string }> => {
   sigkill(async () => await server.stop());
 
   // Start the server
-  const { url } = await server.listen(process.env.PORT);
+  const { url, subscriptionsPath, subscriptionsUrl } = await server.listen(process.env.PORT);
 
-  log('live on %s', url);
+  log('live on %s and %s', url.slice(0, url.length - 1) + subscriptionsPath, subscriptionsUrl);
 
   return { server, url };
 };

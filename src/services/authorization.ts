@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server';
 import { AuthChecker } from 'type-graphql';
 
 import { Context } from '../types';
@@ -7,5 +8,9 @@ import { Context } from '../types';
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export const authChecker: AuthChecker<Context, string> = async ({ context: { userId } }) => {
-  return !!userId;
+  if (!userId) {
+    throw new ApolloError('User is not valid', 'UNAUTHORIZED');
+  }
+
+  return true;
 };

@@ -4,14 +4,15 @@ import { Arg, Args, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, R
 import User from '!/entities/User';
 import {
   ChangePasswordInput,
+  ChangePasswordResponse,
   CreateAccountInput,
-  ForgotPasswordInput,
+  ForgotPasswordArgs,
   ListUsersArgs,
   ListUsersResponse,
   SignInInput,
   SignInResponse,
 } from '!/inputs/user';
-import { payloadToToken } from '!/services/authentication';
+import { destroyToken, payloadToToken } from '!/services/authentication';
 import debug from '!/services/debug';
 import mailer from '!/services/mailer';
 import { Context } from '!/types';
@@ -85,7 +86,7 @@ export class UserResolver {
   @Mutation(() => Boolean, {
     description: 'Find the user, store an one-time-password, and send it to the user`s email.',
   })
-  async forgotPassword(@Arg('data') data: ForgotPasswordInput): Promise<boolean> {
+  async forgotPassword(@Args() data: ForgotPasswordArgs): Promise<boolean> {
     const { email } = data;
 
     const user = await User.findOne({ email });
@@ -111,21 +112,21 @@ export class UserResolver {
     await user.save();
     try {
       await mailer(email, code);
-    } catch (e) {
+    } catch (err) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const msg = `${e.name}:${e.message}`;
+      const msg = `${err.name}:${err.message}`;
       throw new ApolloError("Failed to send code to user's email (" + msg + ')');
     }
 
     return true;
   }
 
-  @Mutation(() => Boolean, {
+  @Mutation(() => ChangePasswordResponse, {
     description:
-      'Find the user related to the one-time-password, check its validity, and update the password.',
+      'Find the user related to the one-time-password, check its validity, and update the password. All tokens will get revoked and a new one will be returned',
   })
-  async changePassword(@Arg('data') data: ChangePasswordInput): Promise<boolean> {
-    const { code, password } = data;
+  async changePassword(@Arg('data') data: ChangePasswordInput): Promise<ChangePasswordResponse> {
+    const { code, password, uniqueIdentifier } = data;
 
     const user = await User.createQueryBuilder('user')
       .where('user.passwordChangeCode = :code AND user.isDeleted = false', { code })
@@ -133,7 +134,7 @@ export class UserResolver {
       .addSelect('user.passwordChangeExpires')
       .getOne();
 
-    if (!user || !user.passwordChangeCode) {
+    if (!user?.passwordChangeCode) {
       throw new ApolloError('Code not found', 'NOT_FOUND');
     }
 
@@ -145,6 +146,8 @@ export class UserResolver {
       throw new ApolloError('Code is invalid', 'NOT_ACCEPTABLE');
     }
 
+    await destroyToken(user.id);
+
     // Update user document, password will get hashed
     user.password = password;
     user.passwordChangeCode = null;
@@ -152,7 +155,10 @@ export class UserResolver {
 
     await user.save();
 
-    return true;
+    return {
+      success: true,
+      token: await payloadToToken(user, uniqueIdentifier),
+    };
   }
 
   @Authorized()

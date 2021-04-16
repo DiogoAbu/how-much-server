@@ -13,6 +13,9 @@ if (!process.env.TYPEORM_DROP) {
 if (!process.env.TYPEORM_SYNC) {
   process.env.TYPEORM_SYNC = 'true';
 }
+if (!process.env.REDIS_URL) {
+  process.env.REDIS_URL = 'redis://localhost:5268';
+}
 
 global.startDb = async () => {
   const startDb = require('../src/services/db').default;
