@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { Theme } from '!/services/mail-template/themes';
+import { GenerateArgs } from '!/services/mail-template/themes';
 
 const { COMPANY_NAME, COMPANY_LOGO_BASE64, SITE_URL } = process.env;
 
-export default function plainCard(code: number, theme: Theme): string {
+export default function plainCard({ code, expireHours, theme }: GenerateArgs): string {
   return `
   <!DOCTYPE html>
   <html>
@@ -223,8 +223,9 @@ export default function plainCard(code: number, theme: Theme): string {
                   style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"
                 >
                   <p style="margin: 0;">
-                    Type the following code in the application to change your account password.
-                    If you didn't request a new password, you can safely delete this email.
+                    Type the following code in the application to change your account password.<br />
+                    The code is only valid for ${expireHours} hours.<br />
+                    If you didn't request a new password, you can safely delete this email.<br />
                   </p>
                 </td>
               </tr>
@@ -234,6 +235,15 @@ export default function plainCard(code: number, theme: Theme): string {
               <tr>
                 <td align="left" bgcolor="${theme.panelBgColor}">
                   <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td align="center">
+                        <h1
+                          style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -1px; line-height: 32px;"
+                        >
+                          Code
+                        </h1>
+                      </td>
+                    </tr>
                     <tr>
                       <td align="center" bgcolor="${theme.panelBgColor}" style="padding: 12px;">
                         <table border="0" cellpadding="0" cellspacing="0">

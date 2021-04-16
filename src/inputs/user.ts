@@ -64,6 +64,11 @@ export class ChangePasswordInput implements Partial<User> {
   code: number;
 
   @Field()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @Field()
   @Length(2, undefined, { message: messageLength })
   @IsNotEmpty()
   password: string;

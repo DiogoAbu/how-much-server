@@ -19,7 +19,7 @@ import { Context } from '!/types';
 import randomInteger from '!/utils/random-integer';
 
 const log = debug.extend('user');
-const DAYS = parseInt(process.env.PASSWORD_CHANGE_EXPIRE_DAYS!, 10) || 1;
+const EXPIRE_HOURS = parseInt(process.env.PASSWORD_CHANGE_EXPIRE_HOURS!, 10) || 4;
 
 @Resolver(() => User)
 export class UserResolver {
@@ -95,15 +95,12 @@ export class UserResolver {
       return true;
     }
 
-    // Create token until it's unique
-    let code = randomInteger(6);
-    while (await User.findOne({ passwordChangeCode: code })) {
-      code = randomInteger(6);
-    }
+    // Create code
+    const code = randomInteger(6);
 
     // Get date and add expiration days
     const date = new Date();
-    date.setDate(date.getDate() + DAYS);
+    date.setHours(date.getHours() + EXPIRE_HOURS);
 
     // Update user document
     user.passwordChangeCode = code;
@@ -111,7 +108,7 @@ export class UserResolver {
 
     await user.save();
     try {
-      await mailer(email, code);
+      await mailer(email, code, EXPIRE_HOURS);
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const msg = `${err.name}:${err.message}`;
@@ -126,20 +123,22 @@ export class UserResolver {
       'Find the user related to the one-time-password, check its validity, and update the password. All tokens will get revoked and a new one will be returned',
   })
   async changePassword(@Arg('data') data: ChangePasswordInput): Promise<ChangePasswordResponse> {
-    const { code, password, uniqueIdentifier } = data;
+    const { code, email, password, uniqueIdentifier } = data;
 
     const user = await User.createQueryBuilder('user')
-      .where('user.passwordChangeCode = :code AND user.isDeleted = false', { code })
+      .where('user.passwordChangeCode = :code', { code })
+      .andWhere('user.email = :email', { email })
+      .andWhere('user.isDeleted = false')
       .addSelect('user.passwordChangeCode')
       .addSelect('user.passwordChangeExpires')
       .getOne();
 
-    if (!user?.passwordChangeCode) {
+    if (!user?.passwordChangeExpires) {
       throw new ApolloError('Code not found', 'NOT_FOUND');
     }
 
     const now = Date.now();
-    const expires = user.passwordChangeExpires!.getTime();
+    const expires = user.passwordChangeExpires.getTime();
 
     // If today is greater than the expire date
     if (now > expires) {

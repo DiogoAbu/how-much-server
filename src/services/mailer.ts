@@ -11,7 +11,7 @@ const DEFAULT_THEME = 'whiteBlue';
 
 const log = debug.extend('mailer');
 
-export default async function mailer(to: string, code: number): Promise<void> {
+export default async function mailer(to: string, code: number, expireHours: number): Promise<void> {
   if (!to || !code) {
     return;
   }
@@ -54,7 +54,7 @@ export default async function mailer(to: string, code: number): Promise<void> {
   log('Using email theme: %s', templateTheme);
   const theme = themes[templateTheme];
 
-  const html = generate(code, theme);
+  const html = generate({ code, expireHours, theme });
   log('Generated HTML successfully');
 
   // Send mail with defined transport object
@@ -67,6 +67,7 @@ export default async function mailer(to: string, code: number): Promise<void> {
       subject: `Change the password of your ${COMPANY_NAME} account`,
       text:
         `Type the code ${code} in the application to change your account password.\n` +
+        `The code is only valid for ${expireHours} hours.\n` +
         "If you didn't request a new password, you can safely delete this email.\n",
       html,
     });

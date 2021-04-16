@@ -12,6 +12,12 @@ export type Theme = {
   buttonTextColor: string;
 };
 
+export type GenerateArgs = {
+  code: number;
+  expireHours: number;
+  theme: Theme;
+};
+
 const whiteBlue: Theme = {
   bodyBgColor: '#e9ecef',
 

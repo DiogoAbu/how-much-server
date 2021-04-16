@@ -130,7 +130,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    success\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"code\":378982,\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"ChangePassword\"}"
+        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    success\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"code\":194452,\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"ChangePassword\"}"
       },
       "parameters": [],
       "headers": [
