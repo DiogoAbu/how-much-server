@@ -27,6 +27,11 @@ jobs:
           POSTGRES_USER: ${{ env.postgres-user }}
           POSTGRES_PASSWORD: ${{ env.postgres-password }}
           POSTGRES_DB: ${{ env.postgres-db }}
+      redis:
+        image: redis:6-alpine
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 6379/tcp
 
     steps:
       - name: Checkout the repo
@@ -71,6 +76,7 @@ jobs:
         run: yarn jest --ci --onlyChanged --coverage --json --outputFile=jest.results.json
         env:
           DATABASE_URL: postgres://${{ env.postgres-user }}:${{ env.postgres-password }}@localhost:${{ job.services.postgres.ports[5432] }}/${{ env.postgres-db }}
+          REDIS_URL: redis://localhost:${{ job.services.redis.ports[6379] }}
 
       - name: Handle test results
         uses: wildone/jest-github-action@45e8796f0fbf3491a8657de9d2b3f13f75de9a7d

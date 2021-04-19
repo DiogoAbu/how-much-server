@@ -37,7 +37,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744231,
       "isPrivate": false,
@@ -72,7 +72,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744431,
       "isPrivate": false,
@@ -107,9 +107,79 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744381,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_54cb55cd7767497eb854927db890ad94",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Devices Authorized",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"{\\n  devicesAuthorized {\\n    deviceName\\n    lastAccessAt\\n    createdAt\\n  }\\n}\\n\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744406,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_5a8d24ea99334ec2af0170965d46cfd8",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Verify 2FA",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation Verify2FA($totp: String!) {\\n  verify2FA(totp: $totp)\\n}\\n\",\"variables\":{\"totp\":\"417122\"},\"operationName\":\"Verify2FA\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744462.25,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
@@ -130,7 +200,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    success\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"code\":194452,\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"ChangePassword\"}"
+        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"code\":194458,\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"ChangePassword\"}"
       },
       "parameters": [],
       "headers": [
@@ -142,7 +212,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744181,
       "isPrivate": false,
@@ -177,7 +247,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744331,
       "isPrivate": false,
@@ -212,9 +282,79 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744281,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_d4fe207ba8684f7d8c96b8aaa736942d",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Sign In With 2FA",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation SignInWith2FA($user: SignInInput) {\\n  signInWith2FA(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\",\"totp\":\"370147\"}},\"operationName\":\"SignInWith2FA\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744456,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_f2418bfb47854178b88d8432aacfd1d5",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Enable 2FA",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation {\\n  enable2FA {\\n    success\\n    secret\\n  }\\n}\\n\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744468.5,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
@@ -235,7 +375,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Diogo\",\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"CreateAccount\"}"
+        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Diogo\",\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"CreateAccount\"}"
       },
       "parameters": [],
       "headers": [
@@ -267,7 +407,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"uniqueIdentifier\":\"{% uuid 'v4' %}\"}},\"operationName\":\"SignIn\"}"
+        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"SignIn\"}"
       },
       "parameters": [],
       "headers": [

@@ -1,10 +1,17 @@
 export type ValueOf<T> = T[keyof T];
 
-export interface AuthenticationPayload {
-  id: string;
-  uniqueIdentifier: string;
+export interface TokenPayload {
+  userId: string;
+  deviceName: string;
+  isShortLived: boolean;
+  expirationDate?: number;
 }
 
-export type Context = {
-  userId?: string | null;
-};
+export interface TokenRedisRow {
+  token: string;
+  deviceName: string;
+  lastAccessAt: number;
+  createdAt: number;
+}
+
+export type Context = Partial<TokenPayload>;

@@ -1,6 +1,27 @@
 import supertest from 'supertest';
 
-import randomInteger from '!/utils/random-integer';
+let accessToken = '';
+
+// User info
+const name = 'test';
+const email = 'test@noreply.io';
+const password = 'password';
+const deviceName = 'jest';
+const code = 123456;
+const secret2FA = 'fake-secret';
+
+jest.mock('!/utils/random-integer', () => ({
+  __esModule: true,
+  default: () => code,
+}));
+
+jest.mock('otplib', () => ({
+  __esModule: true,
+  authenticator: {
+    check: () => true,
+    generateSecret: () => secret2FA,
+  },
+}));
 
 beforeAll(async () => {
   await global.startDb();
@@ -11,67 +32,231 @@ afterAll(async () => {
   await global.server.stop();
   await global.db.dropDatabase();
   await global.db.close();
+  await global.stopRedis();
 });
 
-describe('user register/login tests', () => {
-  const name = 'test';
-  const email = 'test@noreply.io';
-  const password = 'password';
-
-  it('successfully create account', async () => {
-    const query = `mutation CreateAccount($user: CreateAccountInput) {
-      createAccount(data: $user) {
-        user {
-          name
-          email
-        }
-        token
+it('successfully create account', async () => {
+  const query = `mutation CreateAccount($user: CreateAccountInput) {
+    createAccount(data: $user) {
+      user {
+        name
+        email
       }
-    }`;
+      token
+    }
+  }`;
 
-    const request = supertest(global.serverUrl).post('graphql');
-    const response = await request.send({
-      query,
-      variables: {
-        user: {
-          name,
-          email,
-          password,
-          uniqueIdentifier: String(randomInteger(9)),
-        },
+  const request = supertest(global.serverUrl).post('graphql');
+  const response = await request.send({
+    query,
+    variables: {
+      user: {
+        name,
+        email,
+        password,
+        deviceName,
       },
-    });
-
-    expect(response.status).toEqual(200);
-    expect(response.body).toHaveProperty('data.createAccount.token');
-    expect(response.body.data.createAccount.user).toEqual({ name, email });
+    },
   });
 
-  it('successfully sign in', async () => {
-    const query = `mutation SignIn($user: SignInInput) {
-      signIn(data: $user) {
-        user {
-          name
-          email
-        }
-        token
+  expect(response.status).toEqual(200);
+  expect(response.body.data.createAccount.token).toBeDefined();
+  expect(response.body.data.createAccount.user).toEqual({ name, email });
+});
+
+it('successfully sign in', async () => {
+  const query = `mutation SignIn($user: SignInInput) {
+    signIn(data: $user) {
+      user {
+        name
+        email
       }
-    }`;
+      token
+      is2FAEnabled
+    }
+  }`;
 
-    const request = supertest(global.serverUrl).post('graphql');
-    const response = await request.send({
-      query,
-      variables: {
-        user: {
-          email,
-          password,
-          uniqueIdentifier: String(randomInteger(9)),
-        },
+  const request = supertest(global.serverUrl).post('graphql');
+  const response = await request.send({
+    query,
+    variables: {
+      user: {
+        email,
+        password,
+        deviceName,
       },
-    });
-
-    expect(response.status).toEqual(200);
-    expect(response.body).toHaveProperty('data.signIn.token');
-    expect(response.body.data.signIn.user).toEqual({ name, email });
+    },
   });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.signIn.token).toBeDefined();
+  expect(response.body.data.signIn.user).toEqual({ name, email });
+  expect(response.body.data.signIn.is2FAEnabled).toEqual(false);
+
+  accessToken = response.body.data.signIn.token;
+});
+
+it('send code to email with forgot password', async () => {
+  const query = `mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
+  }`;
+
+  const request = supertest(global.serverUrl).post('graphql');
+  const response = await request.send({
+    query,
+    variables: {
+      email,
+    },
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.forgotPassword).toEqual(true);
+});
+
+it('change password fails using wrong code', async () => {
+  const query = `mutation ChangePassword($data: ChangePasswordInput) {
+    changePassword(data: $data) {
+      token
+    }
+  }`;
+
+  const request = supertest(global.serverUrl).post('graphql');
+  const response = await request.send({
+    query,
+    variables: {
+      data: {
+        code: 654321,
+        email,
+        password,
+        deviceName,
+      },
+    },
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body).not.toHaveProperty('data.changePassword.token');
+  expect(response.body.data.changePassword).toEqual(null);
+});
+
+it('change password passes using correct code', async () => {
+  const query = `mutation ChangePassword($data: ChangePasswordInput) {
+    changePassword(data: $data) {
+      token
+    }
+  }`;
+
+  const request = supertest(global.serverUrl).post('graphql');
+  const response = await request.send({
+    query,
+    variables: {
+      data: {
+        code,
+        email,
+        password,
+        deviceName,
+      },
+    },
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.changePassword.token).toBeDefined();
+});
+
+it('ask to activate 2FA and return secret', async () => {
+  const query = `mutation {
+    enable2FA {
+      success
+      secret
+    }
+  }`;
+
+  expect(accessToken).toBeDefined();
+
+  const request = supertest(global.serverUrl).post('graphql').set('Authorization', `Bearer ${accessToken}`);
+  const response = await request.send({
+    query,
+    variables: {},
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.enable2FA.success).toEqual(true);
+  expect(response.body.data.enable2FA.secret).toEqual(secret2FA);
+});
+
+it('finish activation of 2FA', async () => {
+  const query = `mutation Verify2FA($totp: String!) {
+    verify2FA(totp: $totp)
+  }`;
+
+  expect(accessToken).toBeDefined();
+
+  const request = supertest(global.serverUrl).post('graphql').set('Authorization', `Bearer ${accessToken}`);
+  const response = await request.send({
+    query,
+    variables: {
+      totp: 'fake-totp',
+    },
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.verify2FA).toEqual(true);
+});
+
+it('sign in with 2FA', async () => {
+  const querySignIn = `mutation SignIn($user: SignInInput) {
+    signIn(data: $user) {
+      user {
+        name
+        email
+      }
+      token
+      is2FAEnabled
+    }
+  }`;
+
+  const requestSignIn = supertest(global.serverUrl).post('graphql');
+  const responseSignIn = await requestSignIn.send({
+    query: querySignIn,
+    variables: {
+      user: {
+        email,
+        password,
+        deviceName,
+      },
+    },
+  });
+
+  expect(responseSignIn.status).toEqual(200);
+  expect(responseSignIn.body.data.signIn.token).toBeDefined();
+  expect(responseSignIn.body.data.signIn.user).toEqual(null);
+  expect(responseSignIn.body.data.signIn.is2FAEnabled).toEqual(true);
+
+  const tempToken: string = responseSignIn.body.data.signIn.token;
+
+  const query = `mutation SignInWith2FA($user: SignInInput) {
+    signInWith2FA(data: $user) {
+      user {
+        name
+        email
+      }
+      token
+    }
+  }`;
+
+  const request = supertest(global.serverUrl).post('graphql').set('Authorization', `Bearer ${tempToken}`);
+  const response = await request.send({
+    query,
+    variables: {
+      user: {
+        email,
+        password,
+        deviceName,
+        totp: 'fake-totp',
+      },
+    },
+  });
+
+  expect(response.status).toEqual(200);
+  expect(response.body.data.signInWith2FA.token).toBeDefined();
+  expect(response.body.data.signInWith2FA.user).toEqual({ name, email });
 });

@@ -2,7 +2,7 @@ import { ApolloServer } from 'apollo-server';
 import { buildSchema } from 'type-graphql';
 
 import resolvers from '!/resolvers';
-import { getUserFromHeader } from '!/services/authentication';
+import { getPayloadFromHeaderToken } from '!/services/authentication';
 import { authChecker } from '!/services/authorization';
 import { Context } from '!/types';
 
@@ -31,8 +31,7 @@ export default async (): Promise<{ server: ApolloServer; url: string }> => {
       if (connection) {
         context = connection.context;
       } else {
-        const userId = await getUserFromHeader(req.headers);
-        context = { userId };
+        context = await getPayloadFromHeaderToken(req.headers);
       }
       return context;
     },
@@ -40,8 +39,7 @@ export default async (): Promise<{ server: ApolloServer; url: string }> => {
       onConnect: async (connectionParams) => {
         let context: Context = {};
         if (connectionParams) {
-          const userId = await getUserFromHeader(connectionParams as never);
-          context = { userId };
+          context = await getPayloadFromHeaderToken(connectionParams as never);
         }
         return context;
       },

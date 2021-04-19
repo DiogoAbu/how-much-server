@@ -43,6 +43,12 @@ export default class User extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true, select: false })
   passwordChangeExpires: Date | null;
 
+  @Column({ type: 'text', nullable: true, select: false })
+  secret2FA: string | null;
+
+  @Column({ type: 'boolean', default: false, select: false })
+  is2FAEnabled: boolean;
+
   @ManyToMany(() => User, (user) => user.followersInverse, {
     cascade: false,
   })

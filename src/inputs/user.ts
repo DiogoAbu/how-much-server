@@ -29,11 +29,11 @@ export class CreateAccountInput implements Partial<User> {
 
   @Field()
   @IsNotEmpty()
-  uniqueIdentifier: string;
+  deviceName: string;
 }
 
 @InputType()
-export class SignInInput implements Partial<User> {
+export class SignInInput {
   @Field()
   @IsEmail(undefined, { message: 'Must be a valid email' })
   @IsNotEmpty()
@@ -46,11 +46,27 @@ export class SignInInput implements Partial<User> {
 
   @Field()
   @IsNotEmpty()
-  uniqueIdentifier: string;
+  deviceName: string;
+
+  @Field()
+  @IsOptional()
+  totp?: string;
+}
+
+@ObjectType()
+export class SignInResponse {
+  @Field(() => User)
+  user?: User;
+
+  @Field()
+  is2FAEnabled?: boolean;
+
+  @Field()
+  token: string;
 }
 
 @ArgsType()
-export class ForgotPasswordArgs implements Partial<User> {
+export class ForgotPasswordArgs {
   @Field()
   @IsEmail()
   @IsNotEmpty()
@@ -58,7 +74,7 @@ export class ForgotPasswordArgs implements Partial<User> {
 }
 
 @InputType()
-export class ChangePasswordInput implements Partial<User> {
+export class ChangePasswordInput {
   @Field()
   @IsNotEmpty()
   code: number;
@@ -75,7 +91,13 @@ export class ChangePasswordInput implements Partial<User> {
 
   @Field()
   @IsNotEmpty()
-  uniqueIdentifier: string;
+  deviceName: string;
+}
+
+@ObjectType()
+export class ChangePasswordResponse {
+  @Field()
+  token: string;
 }
 
 @InputType()
@@ -117,6 +139,7 @@ export class ListUsersArgs {
   @IsOptional()
   take?: number;
 }
+
 @ObjectType()
 export class ListUsersResponse {
   @Field()
@@ -127,19 +150,22 @@ export class ListUsersResponse {
 }
 
 @ObjectType()
-export class SignInResponse {
-  @Field(() => User)
-  user: User;
+export class DevicesAuthorizedResponse {
+  @Field()
+  deviceName: string;
 
   @Field()
-  token: string;
+  lastAccessAt: Date;
+
+  @Field()
+  createdAt: Date;
 }
 
 @ObjectType()
-export class ChangePasswordResponse {
+export class Enable2FAResponse {
   @Field()
   success: boolean;
 
   @Field()
-  token: string;
+  secret?: string;
 }

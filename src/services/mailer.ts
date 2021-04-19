@@ -2,7 +2,7 @@ import { createTestAccount, createTransport, getTestMessageUrl } from 'nodemaile
 
 import debug from '!/services/debug';
 import templates from '!/services/mail-template';
-import themes from '!/services/mail-template/themes';
+import themes, { GenerateArgs } from '!/services/mail-template/themes';
 
 const { COMPANY_NAME, NOREPLY_EMAIL, EMAIL_TEMPLATE, EMAIL_TEMPLATE_THEME } = process.env;
 
@@ -41,7 +41,7 @@ export default async function mailer(to: string, code: number, expireHours: numb
   }
 
   log('Using email template: %s', template);
-  const generate = templates[template];
+  const generate: (args: GenerateArgs) => string = templates[template];
 
   // Get email theme
   let templateTheme;

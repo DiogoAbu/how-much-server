@@ -6,6 +6,7 @@ declare global {
     interface Global {
       startDb: () => Promise<void>;
       startServer: () => Promise<void>;
+      stopRedis: () => Promise<void>;
       db: Connection;
       server: ApolloServer;
       serverUrl: string;

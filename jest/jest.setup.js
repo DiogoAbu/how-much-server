@@ -1,5 +1,5 @@
-if (!process.env.SECRET_KEY) {
-  process.env.SECRET_KEY = 'gA85Qme9KOCzlgg6MUKaNB1lUXZfxZuwSzvXCThJnKo';
+if (!process.env.TOKEN_SECRET_KEY) {
+  process.env.TOKEN_SECRET_KEY = 'gA85Qme9KOCzlgg6MUKaNB1lUXZfxZuwSzvXCThJnKo';
 }
 if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = 'postgres://postgres:password@localhost:4321/howmuchtest';
@@ -27,4 +27,9 @@ global.startServer = async () => {
   const { server, url } = await startServer();
   global.server = server;
   global.serverUrl = url;
+};
+
+global.stopRedis = async () => {
+  const { quitAll } = require('../src/services/redis');
+  await quitAll();
 };
