@@ -13,7 +13,7 @@ export type Theme = {
 };
 
 export type GenerateArgs = {
-  code: number;
+  code: string;
   expireHours: number;
   theme: Theme;
 };

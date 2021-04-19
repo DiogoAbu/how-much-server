@@ -7,19 +7,18 @@ const name = 'test';
 const email = 'test@noreply.io';
 const password = 'password';
 const deviceName = 'jest';
-const code = 123456;
 const secret2FA = 'fake-secret';
-
-jest.mock('!/utils/random-integer', () => ({
-  __esModule: true,
-  default: () => code,
-}));
+const secretChangePass = 'fake-secret';
 
 jest.mock('otplib', () => ({
   __esModule: true,
   authenticator: {
     check: () => true,
     generateSecret: () => secret2FA,
+  },
+  hotp: {
+    check: () => true,
+    generate: () => secretChangePass,
   },
 }));
 
@@ -35,7 +34,7 @@ afterAll(async () => {
   await global.stopRedis();
 });
 
-it('successfully create account', async () => {
+it('create account', async () => {
   const query = `mutation CreateAccount($user: CreateAccountInput) {
     createAccount(data: $user) {
       user {
@@ -64,7 +63,7 @@ it('successfully create account', async () => {
   expect(response.body.data.createAccount.user).toEqual({ name, email });
 });
 
-it('successfully sign in', async () => {
+it('sign in', async () => {
   const query = `mutation SignIn($user: SignInInput) {
     signIn(data: $user) {
       user {
@@ -113,7 +112,7 @@ it('send code to email with forgot password', async () => {
   expect(response.body.data.forgotPassword).toEqual(true);
 });
 
-it('change password fails using wrong code', async () => {
+it('change password', async () => {
   const query = `mutation ChangePassword($data: ChangePasswordInput) {
     changePassword(data: $data) {
       token
@@ -125,32 +124,7 @@ it('change password fails using wrong code', async () => {
     query,
     variables: {
       data: {
-        code: 654321,
-        email,
-        password,
-        deviceName,
-      },
-    },
-  });
-
-  expect(response.status).toEqual(200);
-  expect(response.body).not.toHaveProperty('data.changePassword.token');
-  expect(response.body.data.changePassword).toEqual(null);
-});
-
-it('change password passes using correct code', async () => {
-  const query = `mutation ChangePassword($data: ChangePasswordInput) {
-    changePassword(data: $data) {
-      token
-    }
-  }`;
-
-  const request = supertest(global.serverUrl).post('graphql');
-  const response = await request.send({
-    query,
-    variables: {
-      data: {
-        code,
+        code: 'fake-code',
         email,
         password,
         deviceName,
@@ -162,7 +136,7 @@ it('change password passes using correct code', async () => {
   expect(response.body.data.changePassword.token).toBeDefined();
 });
 
-it('ask to activate 2FA and return secret', async () => {
+it('ask to activate 2FA', async () => {
   const query = `mutation {
     enable2FA {
       success
@@ -203,6 +177,7 @@ it('finish activation of 2FA', async () => {
 });
 
 it('sign in with 2FA', async () => {
+  // Sign in normally to check is 2FA is enabled and get short-lived token
   const querySignIn = `mutation SignIn($user: SignInInput) {
     signIn(data: $user) {
       user {
@@ -231,6 +206,7 @@ it('sign in with 2FA', async () => {
   expect(responseSignIn.body.data.signIn.user).toEqual(null);
   expect(responseSignIn.body.data.signIn.is2FAEnabled).toEqual(true);
 
+  // Get short-lived token
   const tempToken: string = responseSignIn.body.data.signIn.token;
 
   const query = `mutation SignInWith2FA($user: SignInInput) {

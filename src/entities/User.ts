@@ -37,9 +37,6 @@ export default class User extends BaseEntity {
   @Column({ type: 'text', select: false })
   password: string;
 
-  @Column({ type: 'text', unique: true, nullable: true, select: false })
-  passwordChangeCode: number | null;
-
   @Column({ type: 'timestamptz', nullable: true, select: false })
   passwordChangeExpires: Date | null;
 

@@ -15,6 +15,18 @@
       "_type": "workspace"
     },
     {
+      "_id": "fld_02f6d678d24c42e1a1622156524f88f9",
+      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "name": "2FA",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1618347744131,
+      "_type": "request_group"
+    },
+    {
       "_id": "req_247ea49589e647f08cf3607078d9de4a",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -25,7 +37,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation ForgotPassword($email: String!) {\\n  forgotPassword(email: $email)\\n}\\n\",\"variables\":{\"email\":\"diogodeazevedosilva@gmail.com\"},\"operationName\":\"ForgotPassword\"}"
+        "text": "{\"query\":\"mutation ForgotPassword($email: String!) {\\n  forgotPassword(email: $email)\\n}\\n\",\"variables\":{\"email\":\"test@noreply.io\"},\"operationName\":\"ForgotPassword\"}"
       },
       "parameters": [],
       "headers": [
@@ -37,7 +49,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744231,
       "isPrivate": false,
@@ -72,7 +84,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744431,
       "isPrivate": false,
@@ -107,7 +119,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744381,
       "isPrivate": false,
@@ -142,7 +154,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744406,
       "isPrivate": false,
@@ -156,7 +168,7 @@
     },
     {
       "_id": "req_5a8d24ea99334ec2af0170965d46cfd8",
-      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "parentId": "fld_02f6d678d24c42e1a1622156524f88f9",
       "modified": 1600000000000,
       "created": 1600000000000,
       "url": "{{url}}",
@@ -179,7 +191,42 @@
         "type": "bearer",
         "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
-      "metaSortKey": -1618347744462.25,
+      "metaSortKey": -1618347744418.5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_5b2c1e52f0c0479abff78a5e489d10c8",
+      "parentId": "fld_02f6d678d24c42e1a1622156524f88f9",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Me (with 2FA)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"{\\n  me {\\n    id\\n    name\\n    email\\n    pictureUri\\n    lastAccessAt\\n  }\\n}\\n\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744318.5,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
@@ -200,7 +247,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"code\":194458,\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"ChangePassword\"}"
+        "text": "{\"query\":\"mutation ChangePassword($data: ChangePasswordInput) {\\n  changePassword(data: $data) {\\n    token\\n  }\\n}\\n\",\"variables\":{\"data\":{\"email\":\"test@noreply.io\",\"code\":\"478677\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"ChangePassword\"}"
       },
       "parameters": [],
       "headers": [
@@ -212,7 +259,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744181,
       "isPrivate": false,
@@ -247,7 +294,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744331,
       "isPrivate": false,
@@ -282,7 +329,7 @@
       ],
       "authentication": {
         "type": "bearer",
-        "token": "{% response 'body', 'req_d4fe207ba8684f7d8c96b8aaa736942d', 'b64::JC5kYXRhLnNpZ25JbldpdGgyRkEudG9rZW4=::46b', 'no-history', 60 %}"
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
       "metaSortKey": -1618347744281,
       "isPrivate": false,
@@ -296,7 +343,7 @@
     },
     {
       "_id": "req_d4fe207ba8684f7d8c96b8aaa736942d",
-      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "parentId": "fld_02f6d678d24c42e1a1622156524f88f9",
       "modified": 1600000000000,
       "created": 1600000000000,
       "url": "{{url}}",
@@ -305,7 +352,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignInWith2FA($user: SignInInput) {\\n  signInWith2FA(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\",\"totp\":\"370147\"}},\"operationName\":\"SignInWith2FA\"}"
+        "text": "{\"query\":\"mutation SignInWith2FA($user: SignInInput) {\\n  signInWith2FA(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\",\"deviceName\":\"insomnia\",\"totp\":\"370147\"}},\"operationName\":\"SignInWith2FA\"}"
       },
       "parameters": [],
       "headers": [
@@ -319,7 +366,7 @@
         "type": "bearer",
         "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
       },
-      "metaSortKey": -1618347744456,
+      "metaSortKey": -1618347744368.5,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
@@ -331,7 +378,7 @@
     },
     {
       "_id": "req_f2418bfb47854178b88d8432aacfd1d5",
-      "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
+      "parentId": "fld_02f6d678d24c42e1a1622156524f88f9",
       "modified": 1600000000000,
       "created": 1600000000000,
       "url": "{{url}}",
@@ -375,7 +422,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Diogo\",\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"CreateAccount\"}"
+        "text": "{\"query\":\"mutation CreateAccount($user: CreateAccountInput) {\\n  createAccount(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n  }\\n}\\n\",\"variables\":{\"user\":{\"name\":\"Diogo\",\"email\":\"test@noreply.io\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"CreateAccount\"}"
       },
       "parameters": [],
       "headers": [
@@ -407,7 +454,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"diogodeazevedosilva@gmail.com\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"SignIn\"}"
+        "text": "{\"query\":\"mutation SignIn($user: SignInInput) {\\n  signIn(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\",\"deviceName\":\"insomnia\"}},\"operationName\":\"SignIn\"}"
       },
       "parameters": [],
       "headers": [

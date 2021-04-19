@@ -77,7 +77,7 @@ export class ForgotPasswordArgs {
 export class ChangePasswordInput {
   @Field()
   @IsNotEmpty()
-  code: number;
+  code: string;
 
   @Field()
   @IsEmail()

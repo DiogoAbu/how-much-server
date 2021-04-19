@@ -11,7 +11,7 @@ const DEFAULT_THEME = 'whiteBlue';
 
 const log = debug.extend('mailer');
 
-export default async function mailer(to: string, code: number, expireHours: number): Promise<void> {
+export default async function mailer(to: string, code: string, expireHours: number): Promise<void> {
   if (!to || !code) {
     return;
   }

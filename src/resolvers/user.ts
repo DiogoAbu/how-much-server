@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server';
-import { authenticator } from 'otplib';
+import { authenticator, hotp } from 'otplib';
 import { Arg, Args, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 
 import { ALLOW_SHORT_LIVED_TOKEN } from '!/constants';
@@ -21,7 +21,6 @@ import debug from '!/services/debug';
 import mailer from '!/services/mailer';
 import { tokenRedis } from '!/services/redis';
 import { Context, TokenRedisRow } from '!/types';
-import randomInteger from '!/utils/random-integer';
 
 const log = debug.extend('user');
 const EXPIRE_HOURS = parseInt(process.env.PASSWORD_CHANGE_EXPIRE_HOURS!, 10) || 4;
@@ -205,15 +204,14 @@ export class UserResolver {
       return true;
     }
 
-    // Create code
-    const code = randomInteger(6);
-
     // Get date and calc expiration date
     const date = new Date();
     date.setHours(date.getHours() + EXPIRE_HOURS);
 
+    // Create code
+    const code = hotp.generate(user.id, date.getTime());
+
     // Update user document
-    user.passwordChangeCode = code;
     user.passwordChangeExpires = date;
 
     await user.save();
@@ -236,15 +234,13 @@ export class UserResolver {
     const { code, email, password, deviceName } = data;
 
     const user = await User.createQueryBuilder('user')
-      .where('user.passwordChangeCode = :code', { code })
-      .andWhere('user.email = :email', { email })
+      .where('user.email = :email', { email })
       .andWhere('user.isDeleted = false')
-      .addSelect('user.passwordChangeCode')
       .addSelect('user.passwordChangeExpires')
       .getOne();
 
     if (!user?.passwordChangeExpires) {
-      throw new ApolloError('Code not found', 'NOT_FOUND');
+      throw new ApolloError('User not found', 'NOT_FOUND');
     }
 
     const now = Date.now();
@@ -252,18 +248,21 @@ export class UserResolver {
 
     // If today is greater than the expiration date
     if (now > expires) {
-      user.passwordChangeCode = null;
       user.passwordChangeExpires = null;
       await user.save();
 
+      throw new ApolloError('Code is expired', 'NOT_ACCEPTABLE');
+    }
+
+    const isValidCode = hotp.check(code, user.id, user.passwordChangeExpires.getTime());
+    if (!isValidCode) {
       throw new ApolloError('Code is invalid', 'NOT_ACCEPTABLE');
     }
 
     await destroyToken(user.id);
 
-    // Update user document, password will get hashed
+    // Update user document, password will get hashed on save
     user.password = password;
-    user.passwordChangeCode = null;
     user.passwordChangeExpires = null;
     user.lastAccessAt = new Date();
 
