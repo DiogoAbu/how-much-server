@@ -34,7 +34,7 @@ jobs:
           retry_on: error
           command: |
             git remote add heroku https://heroku:$API_KEY@git.heroku.com/$APP_NAME.git
-            git push heroku HEAD:master -f
+            git push heroku HEAD:refs/heads/master -f
         env:
           API_KEY: ${{ secrets.HEROKU_API_KEY }}
           APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
