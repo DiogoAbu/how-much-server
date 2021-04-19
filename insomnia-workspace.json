@@ -177,7 +177,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation Verify2FA($totp: String!) {\\n  verify2FA(totp: $totp)\\n}\\n\",\"variables\":{\"totp\":\"417122\"},\"operationName\":\"Verify2FA\"}"
+        "text": "{\"query\":\"mutation Verify2FA($totp: String!) {\\n  verify2FA(totp: $totp)\\n}\\n\",\"variables\":{\"totp\":\"233787\"},\"operationName\":\"Verify2FA\"}"
       },
       "parameters": [],
       "headers": [
@@ -272,6 +272,41 @@
       "_type": "request"
     },
     {
+      "_id": "req_767dba7c93b3416482644c0a19033adb",
+      "parentId": "fld_02f6d678d24c42e1a1622156524f88f9",
+      "modified": 1600000000000,
+      "created": 1600000000000,
+      "url": "{{url}}",
+      "name": "Disable 2FA",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/graphql",
+        "text": "{\"query\":\"mutation Disable2FA($totp: String!) {\\n  disable2FA(totp: $totp)\\n}\\n\",\"variables\":{\"totp\":\"233787\"},\"operationName\":\"Disable2FA\"}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_fb2c156cf7e24d219559d84d71b602ba"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_fdbbd8d0eb024dc99f803650b4c1f288', 'b64::JC5kYXRhLnNpZ25Jbi50b2tlbg==::46b', 'no-history', 60 %}"
+      },
+      "metaSortKey": -1618347744412.25,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_b8497a941c1f4ad09812b6a029244b23",
       "parentId": "wrk_a142adf3a0ec49dba58cf47c646c5a05",
       "modified": 1600000000000,
@@ -352,7 +387,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/graphql",
-        "text": "{\"query\":\"mutation SignInWith2FA($user: SignInInput) {\\n  signInWith2FA(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\",\"deviceName\":\"insomnia\",\"totp\":\"370147\"}},\"operationName\":\"SignInWith2FA\"}"
+        "text": "{\"query\":\"mutation SignInWith2FA($user: SignInInput) {\\n  signInWith2FA(data: $user) {\\n    user {\\n      id\\n    }\\n    token\\n    is2FAEnabled\\n  }\\n}\\n\",\"variables\":{\"user\":{\"email\":\"test@noreply.io\",\"password\":\"password\",\"deviceName\":\"insomnia\",\"totp\":\"233787\"}},\"operationName\":\"SignInWith2FA\"}"
       },
       "parameters": [],
       "headers": [

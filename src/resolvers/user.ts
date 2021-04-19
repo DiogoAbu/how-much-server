@@ -192,6 +192,35 @@ export class UserResolver {
     return true;
   }
 
+  @Authorized()
+  @Mutation(() => Boolean, {
+    description: 'Given a Time-based One Time Password, verify it, and disable 2FA for the user',
+  })
+  async disable2FA(@Arg('totp') totp: string, @Ctx() ctx: Required<Context>): Promise<boolean> {
+    // Signed in user
+    const { userId } = ctx;
+
+    const user = await User.createQueryBuilder('user')
+      .where('user.id = :userId', { userId })
+      .andWhere('user.isDeleted = false')
+      .addSelect('user.secret2FA')
+      .getOne();
+
+    if (!user?.secret2FA) {
+      throw new ApolloError('User not found', 'NOT_FOUND');
+    }
+
+    const isValidTOTP = authenticator.check(totp, user.secret2FA);
+    if (!isValidTOTP) {
+      throw new ApolloError('TOTP token is invalid', 'UNAUTHORIZED');
+    }
+
+    user.is2FAEnabled = false;
+    await user.save();
+
+    return true;
+  }
+
   @Mutation(() => Boolean, {
     description: 'Find the user, store an one-time-password, and send it to the user`s email.',
   })
