@@ -22,6 +22,7 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ github.event.inputs.checkoutRef }}
+          fetch-depth: 0
 
       - name: Increase watchers to fix Docker
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
