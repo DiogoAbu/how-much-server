@@ -5,7 +5,7 @@
   "private": true,
   "main": "dist",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist",
     "predev": "yarn docker-up",
     "dev": "wait-on -d 1000 -t 30000 tcp:4321 tcp:5268 && ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src",
